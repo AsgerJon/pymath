@@ -30,7 +30,8 @@ def tester01() -> NoReturn:
   app = QApplication(sys.argv)
   window = MainWindow()
   window.show()
-  sys.exit(app.exec_())
+  app.quit()
+  sys.exit(app.exec())
 
 
 if __name__ == '__main__':

@@ -3,6 +3,7 @@
 #  MIT Licence
 from __future__ import annotations
 
+from abc import abstractmethod
 from typing import NoReturn
 
 from PySide6.QtGui import QKeyEvent, QTextDocument, QTextCursor
@@ -96,20 +97,20 @@ class LayoutWindow(BaseWindow):
     """Creator-function for the base widget"""
     self._baseWidget = CoreWidget()
 
-  def _getBaseWidget(self) -> CoreWidget:
+  def getBaseWidget(self) -> CoreWidget:
     """Getter-function for the base widget"""
     if self._baseWidget is None:
       self._createBaseWidget()
-      return self._getBaseWidget()
+      return self.getBaseWidget()
     if isinstance(self._baseWidget, CoreWidget):
       return self._baseWidget
 
+  @abstractmethod
   def setupWidgets(self) -> NoReturn:
     """Sets up the widgets"""
 
   def show(self) -> NoReturn:
     """Sets up the widgets before invoking the show super call"""
-    self.setupWidgets()
     BaseWindow.show(self)
 
   def tellMe(self, msg: str) -> NoReturn:

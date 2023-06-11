@@ -4,8 +4,9 @@
 from __future__ import annotations
 
 from ._fontfamily import Family
+from ._fontsize import FontSize
+from ._fontsettings import FontSettings
 from ._basestyle import BaseStyle
-
 from ._shapesettings import ShapeSettings
 from ._styleinstances import backgroundStyle, darkSquareStyle, gridStyle
 from ._styleinstances import lightSquareStyle, bezelStyle, labelStyle

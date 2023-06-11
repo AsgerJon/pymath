@@ -8,13 +8,14 @@ import os
 from typing import NoReturn
 
 from PySide6.QtCore import Signal, Slot
-from PySide6.QtWidgets import QGridLayout, QFileDialog, QLabel
+from PySide6.QtGui import QFont
+from PySide6.QtWidgets import QGridLayout, QFileDialog, QLabel, \
+  QListWidgetItem, QSizePolicy
 from icecream import ic
-from worktoy.typetools import CallMeMaybe
-from worktoy.waitaminute import ProceduralError
 
 from workside import CoreWidget
-from workside import ListWidget
+from workside import ListedWidget
+from workside.settings import Family
 
 ic.configureOutput(includeContext=True)
 
@@ -25,34 +26,39 @@ class LogWidget(CoreWidget):
   #  Copyright (c) 2023 Asger Jon Vistisen
   #  MIT Licence"""
 
-  receivedLog = Signal(str)
+  hoveredLog = Signal(str)
   clickedLog = Signal(str)
   doubleClickedLog = Signal(str)
-  hoveredLog = Signal(str)
+
   overWritingSaveFile = Signal(str)
+  receivedLog = Signal(str)
 
   def __init__(self, *args, **kwargs) -> None:
-    CoreWidget.__init__(self, *args, **kwargs)
-    self.setMouseTracking(True)
     self._baseLayout = None
     self._listWidget = None
     self._fileName = None
+    self._headerFont = None
     self._headerLabel = None
+    self._saveFileDialog = None
+    CoreWidget.__init__(self, *args, **kwargs)
+    self.setMouseTracking(True)
+    # self.setSizePolicy(QSizePolicy.Policy.MinimumExpanding,
+    #                    QSizePolicy.Policy.MinimumExpanding, )
 
   def setupWidgets(self) -> NoReturn:
     """Sets up the widgets"""
-    self._listWidget = ListWidget()
     self._baseLayout = QGridLayout()
-    self._baseLayout.addWidget(self._listWidget, 0, 0)
+    self._baseLayout.addWidget(self._getListWidget(), 1, 0)
+    self._baseLayout.addWidget(self._getHeaderLabel(), 0, 0)
     self.setLayout(self._baseLayout)
 
   def setupActions(self) -> NoReturn:
     """Sets up the actions"""
-    self._getListWidget().rowHover.connect(
+    self._getListWidget().itemEntered.connect(
       self.hoveredLog.emit)
-    self._getListWidget().rowClicked.connect(
+    self._getListWidget().itemClicked.connect(
       self.clickedLog.emit)
-    self._getListWidget().rowDoubleClicked.connect(
+    self._getListWidget().itemDoubleClicked.connect(
       self.doubleClickedLog.emit)
 
   @Slot()
@@ -68,14 +74,31 @@ class LogWidget(CoreWidget):
       raise NotADirectoryError
     return self.saveLogs(fileName)
 
-  @Slot(str)
-  def saveLogs(self, fileName: str) -> NoReturn:
+  @Slot()
+  def saveLogs(self, ) -> NoReturn:
     """Performs the saving operation on the fileName received."""
-    self._getListWidget().saveContents(fileName)
+    self._getListWidget().saveContents(self._getFileName())
+
+  def _createFont(self) -> NoReturn:
+    """Creator-function for the header font"""
+    self._headerFont = QFont()
+    self._headerFont @ Family.modern
+    self._headerFont.setPointSize(24)
+
+  def _getFont(self) -> QFont:
+    """Getter-function for the font"""
+    if self._headerFont is None:
+      self._createFont()
+      return self._getFont()
+    if isinstance(self._headerFont, QFont):
+      return self._headerFont
+    raise TypeError
 
   def _createHeaderLabel(self) -> NoReturn:
     """Creator-function for the header label"""
     self._headerLabel = QLabel()
+    self._headerLabel.setText('Logged Events')
+    self._headerLabel.setFont(self._getFont())
 
   def _getHeaderLabel(self, ) -> QLabel:
     """Getter-function for the header label"""
@@ -88,14 +111,15 @@ class LogWidget(CoreWidget):
 
   def _createListWidget(self) -> NoReturn:
     """Creator-function for the list widget"""
-    self._listWidget = ListWidget()
+    self._listWidget = ListedWidget()
+    # self._listWidget.itemEntered.connect(self.handleHovered)
 
-  def _getListWidget(self) -> ListWidget:
+  def _getListWidget(self) -> ListedWidget:
     """Returns the list widget"""
     if self._listWidget is None:
       self._createListWidget()
       return self._getListWidget()
-    if isinstance(self._listWidget, ListWidget):
+    if isinstance(self._listWidget, ListedWidget):
       return self._listWidget
 
   def _createBaseLayout(self) -> NoReturn:
@@ -127,23 +151,31 @@ class LogWidget(CoreWidget):
       return self._saveFileDialog
     raise TypeError
 
-  def _beginSaveOperation(self, callBack: CallMeMaybe) -> NoReturn:
-    """Begins the saving operation"""
-    self._getSaveFileDialog().show()
-    if self._getFileName():
-      callBack(self._getFileName())
-    raise ProceduralError()
-
-  def _setFileName(self, fileName: str) -> NoReturn:
+  def _setFileName(self, fileName: str = None) -> bool:
     """Setter-function for the file name"""
-    self._fileName = fileName
+    if isinstance(fileName, str):
+      dirName = os.path.abspath(fileName)
+      if os.path.exists(dirName):
+        self._fileName = fileName
+        return True
+      else:
+        os.makedirs(dirName, exist_ok=True)
+        return self._setFileName(fileName)
+    return False
 
-  def _getFileName(self) -> str:
+  def _getFileName(self, **kwargs) -> str:
     """Getter-function for file name"""
     if self._fileName is None:
-      dialog = self._getSaveFileDialog()
-      if dialog.show() or True:
-        if self._fileName is None:
-          raise ProceduralError()
-        return self._getFileName()
-    return self._fileName
+      _recursion = kwargs.get('recursion', 0)
+      self._getSaveFileDialog().show()
+      if _recursion > 3:
+        raise RecursionError()
+      return self._getFileName(_recursion=_recursion + 1)
+    if isinstance(self._fileName, str):
+      return self._fileName
+    raise TypeError
+
+  def tellMe(self, msg: str) -> NoReturn:
+    """Logs the message received"""
+    self._getListWidget().insertText(msg)
+    self.update()

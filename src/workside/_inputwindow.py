@@ -3,6 +3,7 @@
 #  MIT Licence
 from __future__ import annotations
 
+from abc import abstractmethod
 from typing import NoReturn
 
 from PySide6.QtGui import QKeyEvent
@@ -29,3 +30,7 @@ class InputWindow(LayoutWindow):
   def keyPressEvent(self, event: QKeyEvent) -> NoReturn:
     """Triggers spell checking"""
     LayoutWindow.keyPressEvent(self, event)
+
+  @abstractmethod
+  def setupWidgets(self) -> NoReturn:
+    """Sets up the widgets"""

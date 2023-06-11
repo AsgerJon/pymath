@@ -7,7 +7,7 @@ from icecream import ic
 
 from ._corewidget import CoreWidget
 from ._label import Label
-from ._listwidget import ListWidget
+from ._listwidget import ListedWidget
 from ._logwidget import LogWidget
 
 from ._basewindow import BaseWindow

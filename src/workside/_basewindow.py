@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import NoReturn
 
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QAction, QKeyEvent
+from PySide6.QtGui import QAction, QKeyEvent, QKeySequence
 from PySide6.QtWidgets import QMainWindow, QLabel, QSizePolicy, QWidget
 
 
@@ -102,63 +102,63 @@ class BaseWindow(QMainWindow):
     QMainWindow.show(self)
 
   def setupDebuggers(self) -> NoReturn:
-    """Sets up the debuggers"""
-    self.debugAction01.setShortcut("QKeySequence.fromString('F1')")
+    """Setting up the actions"""
+    self.debugAction01.setShortcut(QKeySequence.fromString('F1'))
     self.debugAction01.setShortcutContext(
       Qt.ShortcutContext.ApplicationShortcut)
     self.debugAction01.triggered.connect(self.debugFunc01)
 
-    self.debugAction02.setShortcut("QKeySequence.fromString('F2')")
+    self.debugAction02.setShortcut(QKeySequence.fromString('F2'))
     self.debugAction02.setShortcutContext(
       Qt.ShortcutContext.ApplicationShortcut)
     self.debugAction02.triggered.connect(self.debugFunc02)
 
-    self.debugAction03.setShortcut("QKeySequence.fromString('F3')")
+    self.debugAction03.setShortcut(QKeySequence.fromString('F3'))
     self.debugAction03.setShortcutContext(
       Qt.ShortcutContext.ApplicationShortcut)
     self.debugAction03.triggered.connect(self.debugFunc03)
 
-    self.debugAction04.setShortcut("QKeySequence.fromString('F4')")
+    self.debugAction04.setShortcut(QKeySequence.fromString('F4'))
     self.debugAction04.setShortcutContext(
       Qt.ShortcutContext.ApplicationShortcut)
     self.debugAction04.triggered.connect(self.debugFunc04)
 
-    self.debugAction05.setShortcut("QKeySequence.fromString('F5')")
+    self.debugAction05.setShortcut(QKeySequence.fromString('F5'))
     self.debugAction05.setShortcutContext(
       Qt.ShortcutContext.ApplicationShortcut)
     self.debugAction05.triggered.connect(self.debugFunc05)
 
-    self.debugAction06.setShortcut("QKeySequence.fromString('F6')")
+    self.debugAction06.setShortcut(QKeySequence.fromString('F6'))
     self.debugAction06.setShortcutContext(
       Qt.ShortcutContext.ApplicationShortcut)
     self.debugAction06.triggered.connect(self.debugFunc06)
 
-    self.debugAction07.setShortcut("QKeySequence.fromString('F7')")
+    self.debugAction07.setShortcut(QKeySequence.fromString('F7'))
     self.debugAction07.setShortcutContext(
       Qt.ShortcutContext.ApplicationShortcut)
     self.debugAction07.triggered.connect(self.debugFunc07)
 
-    self.debugAction08.setShortcut("QKeySequence.fromString('F8')")
+    self.debugAction08.setShortcut(QKeySequence.fromString('F8'))
     self.debugAction08.setShortcutContext(
       Qt.ShortcutContext.ApplicationShortcut)
     self.debugAction08.triggered.connect(self.debugFunc08)
 
-    self.debugAction09.setShortcut("QKeySequence.fromString('F9')")
+    self.debugAction09.setShortcut(QKeySequence.fromString('F9'))
     self.debugAction09.setShortcutContext(
       Qt.ShortcutContext.ApplicationShortcut)
     self.debugAction09.triggered.connect(self.debugFunc09)
 
-    self.debugAction10.setShortcut("QKeySequence.fromString('F10')")
+    self.debugAction10.setShortcut(QKeySequence.fromString('F10'))
     self.debugAction10.setShortcutContext(
       Qt.ShortcutContext.ApplicationShortcut)
     self.debugAction10.triggered.connect(self.debugFunc10)
 
-    self.debugAction11.setShortcut("QKeySequence.fromString('F11')")
+    self.debugAction11.setShortcut(QKeySequence.fromString('F11'))
     self.debugAction11.setShortcutContext(
       Qt.ShortcutContext.ApplicationShortcut)
     self.debugAction11.triggered.connect(self.debugFunc11)
 
-    self.debugAction12.setShortcut("QKeySequence.fromString('F12')")
+    self.debugAction12.setShortcut(QKeySequence.fromString('F12'))
     self.debugAction12.setShortcutContext(
       Qt.ShortcutContext.ApplicationShortcut)
     self.debugAction12.triggered.connect(self.debugFunc12)

@@ -3,9 +3,14 @@
 #  MIT Licence
 from __future__ import annotations
 
+import time
 from typing import NoReturn
 
+from icecream import ic
+
 from workside import InputWindow, LogWidget
+
+ic.configureOutput(includeContext=True)
 
 
 class MainWindow(InputWindow):
@@ -35,3 +40,26 @@ class MainWindow(InputWindow):
   def setupWidgets(self) -> NoReturn:
     """Sets up the widgets"""
     self.getBaseLayout().addWidget(self._getLogWidget(), 0, 0)
+    self.getBaseWidget().setLayout(self.getBaseLayout())
+    self.setCentralWidget(self.getBaseWidget())
+
+  def tellMe(self, msg: str) -> NoReturn:
+    """Takes a log"""
+    self._getLogWidget().tellMe(msg)
+
+  def show(self, ) -> NoReturn:
+    """Implementation"""
+    self.setupWidgets()
+    InputWindow.show(self)
+
+  def debugFunc01(self) -> NoReturn:
+    """omg"""
+
+  def debugFunc02(self) -> NoReturn:
+    """fuck you"""
+
+  def debugFunc03(self) -> NoReturn:
+    """omg"""
+
+  def debugFunc04(self) -> NoReturn:
+    """omg"""
